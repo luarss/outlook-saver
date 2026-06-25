@@ -12,6 +12,15 @@ dist
 dist-ssr
 *.local
 
+# Rust / Tauri build output
+/src-tauri/target
+target
+
+# Chrome extension build artifacts
+chrome-extension/*.zip
+chrome-extension/*.crx
+chrome-extension/*.pem
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
