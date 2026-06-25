@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Outlook Saver</title>
+    <script type="module" src="/main.js" defer></script>
+  </head>
+
+  <body>
+    <main class="container">
+      <header>
+        <h1>Outlook Saver</h1>
+        <p class="subtitle">
+          Auto-download new Outlook mail and save each message as a
+          <code>.eml</code> file.
+        </p>
+      </header>
+
+      <!-- Account / status -->
+      <section class="card">
+        <div class="row between">
+          <div>
+            <div class="label">Account</div>
+            <div id="account" class="value">Not signed in</div>
+          </div>
+          <div class="actions">
+            <button id="login-btn">Sign in</button>
+            <button id="logout-btn" class="secondary" hidden>Sign out</button>
+          </div>
+        </div>
+
+        <div class="row between">
+          <div>
+            <div class="label">Watcher</div>
+            <div id="watch-state" class="value">Stopped</div>
+          </div>
+          <div class="actions">
+            <button id="start-btn" disabled>Start watching</button>
+            <button id="stop-btn" class="secondary" hidden>Stop</button>
+          </div>
+        </div>
+
+        <div id="status-line" class="status">Idle.</div>
+      </section>
+
+      <!-- Settings -->
+      <section class="card">
+        <h2>Settings</h2>
+
+        <label class="field">
+          <span>Azure client ID <em>(required)</em></span>
+          <input id="client-id" placeholder="00000000-0000-0000-0000-000000000000" />
+        </label>
+
+        <label class="field">
+          <span>Account type / tenant</span>
+          <select id="tenant">
+            <option value="common">Work, school, or personal (common)</option>
+            <option value="consumers">Personal Microsoft accounts only</option>
+            <option value="organizations">Work or school only</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Default save folder (optional)</span>
+          <div class="row">
+            <input id="save-dir" placeholder="Leave empty to choose each time" />
+            <button id="pick-dir" class="secondary" type="button">Browse…</button>
+          </div>
+        </label>
+
+        <label class="checkbox">
+          <input type="checkbox" id="ask-each" checked />
+          <span>Ask where to save for every email (uncheck to save silently to the folder above)</span>
+        </label>
+
+        <button id="save-settings-btn">Save settings</button>
+      </section>
+
+      <!-- Activity log -->
+      <section class="card">
+        <h2>Activity</h2>
+        <ul id="log" class="log"></ul>
+      </section>
+
+      <details class="help">
+        <summary>First-time setup (Azure app registration)</summary>
+        <ol>
+          <li>Go to the <strong>Azure / Entra portal → App registrations → New registration</strong>.</li>
+          <li>Name it anything; under <strong>Supported account types</strong> pick the option matching your tenant choice above.</li>
+          <li>Add a <strong>platform → Mobile and desktop applications</strong> with redirect URI <code>http://localhost</code>.</li>
+          <li>Under <strong>Authentication</strong>, enable <em>Allow public client flows</em>.</li>
+          <li>Under <strong>API permissions</strong>, add delegated permission
+            <code>IMAP.AccessAsUser.All</code> (and <code>offline_access</code>, <code>openid</code>, <code>profile</code>).</li>
+          <li>Copy the <strong>Application (client) ID</strong> into the field above and Save settings.</li>
+        </ol>
+      </details>
+    </main>
+  </body>
+</html>
