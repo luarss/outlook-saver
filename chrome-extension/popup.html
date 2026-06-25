@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        font-family: -apple-system, system-ui, sans-serif;
+        width: 260px;
+        margin: 0;
+        padding: 14px;
+        color: #201f1e;
+      }
+      h1 {
+        font-size: 14px;
+        margin: 0 0 10px;
+      }
+      .row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+      button {
+        flex: 1;
+        padding: 8px;
+        border: 1px solid #0078d4;
+        background: #0078d4;
+        color: #fff;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+      }
+      button.secondary {
+        background: #fff;
+        color: #0078d4;
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+      #status {
+        font-size: 12px;
+        color: #605e5c;
+        min-height: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Save the open email</h1>
+    <div class="row">
+      <button id="saveEml">Save .eml</button>
+      <button id="saveMd" class="secondary">Save .md</button>
+    </div>
+    <div id="status"></div>
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Outlook Saver",
+  "version": "0.1.0",
+  "description": "Save the email you're viewing in Outlook on the web as an .eml or .md file.",
+  "permissions": ["downloads", "activeTab", "scripting"],
+  "host_permissions": [
+    "https://outlook.office.com/*",
+    "https://outlook.office365.com/*",
+    "https://outlook.live.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://outlook.office.com/*",
+        "https://outlook.office365.com/*",
+        "https://outlook.live.com/*"
+      ],
+      "js": ["content_script.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_title": "Outlook Saver",
+    "default_popup": "popup.html"
+  }
+}
