@@ -1,0 +1,22 @@
+<svg width="512" height="512" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#28A8EA"/>
+      <stop offset="1" stop-color="#0F6CBD"/>
+    </linearGradient>
+  </defs>
+
+  <!-- rounded-square background -->
+  <rect width="128" height="128" rx="28" fill="url(#bg)"/>
+
+  <!-- envelope body -->
+  <rect x="26" y="36" width="76" height="50" rx="8" fill="#FFFFFF"/>
+  <!-- envelope flap -->
+  <path d="M30 42 L64 65 L98 42" stroke="#0F6CBD" stroke-width="6"
+        stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- save / download arrow badge -->
+  <circle cx="92" cy="90" r="22" fill="#0F6CBD" stroke="#FFFFFF" stroke-width="5"/>
+  <path d="M92 79 V99 M83 91 L92 100 L101 91" stroke="#FFFFFF" stroke-width="6"
+        stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>
