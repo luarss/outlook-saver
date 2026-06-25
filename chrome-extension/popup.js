@@ -69,7 +69,7 @@ async function activeTab() {
 async function save(format) {
   setStatus('Reading email…');
   const tab = await activeTab();
-  if (!tab || !/^https:\/\/outlook\.(office|office365|live)\.com/.test(tab.url || '')) {
+  if (!tab || !/^https:\/\/outlook\.(office\.com|office365\.com|live\.com|cloud\.microsoft)/.test(tab.url || '')) {
     setStatus('Open an email in Outlook on the web first.');
     return;
   }
