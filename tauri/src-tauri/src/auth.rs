@@ -15,9 +15,9 @@ use oauth2::basic::{
     BasicTokenType,
 };
 use oauth2::{
-    AuthType, AuthUrl, AuthorizationCode, Client, ClientId, CsrfToken, ExtraTokenFields,
-    PkceCodeChallenge, RedirectUrl, RefreshToken, Scope, StandardRevocableToken,
-    StandardTokenResponse, TokenResponse, TokenUrl,
+    AuthType, AuthUrl, AuthorizationCode, Client, ClientId, CsrfToken, EndpointNotSet,
+    EndpointSet, ExtraTokenFields, PkceCodeChallenge, RedirectUrl, RefreshToken, Scope,
+    StandardRevocableToken, StandardTokenResponse, TokenResponse, TokenUrl,
 };
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
@@ -44,11 +44,22 @@ type MsTokenResponse = StandardTokenResponse<MsExtraFields, BasicTokenType>;
 type MsClient = Client<
     BasicErrorResponse,
     MsTokenResponse,
-    BasicTokenType,
     BasicTokenIntrospectionResponse,
     StandardRevocableToken,
     BasicRevocationErrorResponse,
+    EndpointSet,
+    EndpointNotSet,
+    EndpointNotSet,
+    EndpointNotSet,
+    EndpointSet,
 >;
+
+fn build_http_client() -> Result<oauth2::reqwest::blocking::Client> {
+    oauth2::reqwest::blocking::Client::builder()
+        .redirect(oauth2::reqwest::redirect::Policy::none())
+        .build()
+        .context("building HTTP client")
+}
 
 fn build_client(cfg: &AppConfig, redirect: Option<String>) -> Result<MsClient> {
     if cfg.client_id.trim().is_empty() {
@@ -63,7 +74,9 @@ fn build_client(cfg: &AppConfig, redirect: Option<String>) -> Result<MsClient> {
         cfg.tenant
     ))?;
 
-    let mut client = MsClient::new(ClientId::new(cfg.client_id.clone()), None, auth_url, Some(token_url))
+    let mut client = Client::<BasicErrorResponse, MsTokenResponse, BasicTokenIntrospectionResponse, StandardRevocableToken, BasicRevocationErrorResponse>::new(ClientId::new(cfg.client_id.clone()))
+        .set_auth_uri(auth_url)
+        .set_token_uri(token_url)
         // Public clients send the client_id in the request body (no secret).
         .set_auth_type(AuthType::RequestBody);
 
@@ -111,10 +124,11 @@ pub fn interactive_login(
         bail!("OAuth state mismatch — possible CSRF, aborting.");
     }
 
+    let http_client = build_http_client()?;
     let token = client
         .exchange_code(AuthorizationCode::new(code))
         .set_pkce_verifier(pkce_verifier)
-        .request(oauth2::reqwest::http_client)
+        .request(&http_client)
         .map_err(|e| anyhow!("token exchange failed: {e}"))?;
 
     let access_token = token.access_token().secret().clone();
@@ -146,10 +160,11 @@ pub fn refresh_access_token(cfg: &AppConfig) -> Result<String> {
         .ok_or_else(|| anyhow!("not signed in (no refresh token)"))?;
     let client = build_client(cfg, None)?;
 
+    let http_client = build_http_client()?;
     let token = client
         .exchange_refresh_token(&RefreshToken::new(refresh))
         .add_scopes(SCOPES.iter().map(|s| Scope::new((*s).to_string())))
-        .request(oauth2::reqwest::http_client)
+        .request(&http_client)
         .map_err(|e| anyhow!("refresh failed: {e}"))?;
 
     if let Some(new_refresh) = token.refresh_token() {
